@@ -4,7 +4,6 @@ from models import Todos
 import schemas
 from sqlalchemy.orm import Session
 from database import SessionLocal
-# from typing import Annotated, List
 from typing import List
 from datetime import datetime
 
@@ -20,28 +19,27 @@ def get_db():
     finally:
         db.close()
 
-# db_dependencies = Annotated[Session, Depends(get_db)]
-# db: db_dependencies
-
 router = APIRouter()
 
+
+# Endpoint to get the list of todos.
 @router.get('/', status_code=status.HTTP_200_OK, response_model=List[schemas.TodoResponse])
 def get_todos(db: Session = Depends(get_db), limit: int = Query(default=10, ge=1, le=100),
               offset: int = Query(default=0, ge=0)
 ):
     todos = db.query(Todos).offset(offset).limit(limit).all()
-    # db.refresh(todos)
-    # db.refresh()
     return todos
 
 
-# str = Path(..., pattern=r"^\d{2}-\d{2}-\d{4}$")
+# Endpoint to get the list of todos created on a same date. 
 @router.get('/filter/{filter_by_date_created}', status_code=status.HTTP_200_OK, response_model=List[schemas.TodoResponse])
 def sort_by_date_created(date_craeted_at: str, db: Session = Depends(get_db), limit: int = Query(default=10, ge=1, le=100),
               offset: int = Query(default=0, ge=0)):
     todos = db.query(Todos).filter(Todos.create_date == date_craeted_at).offset(offset).limit(limit).all()
     return todos
 
+
+# Endpoint to create new todo.
 @router.post('/create', status_code=status.HTTP_201_CREATED)
 def create_todo(new_todo: schemas.TodoRequest, db: Session = Depends(get_db)):
     date_time = datetime.now()
@@ -54,6 +52,8 @@ def create_todo(new_todo: schemas.TodoRequest, db: Session = Depends(get_db)):
     db.refresh(todo_model)  # Refresh to get the id and other fields
     return todo_model
 
+
+# Endpoint to update the existing todo.
 @router.put('/update/{todo_id}', status_code=status.HTTP_202_ACCEPTED)
 def update_todo(new_todo: schemas.TodoRequest, db: Session = Depends(get_db), todo_id: int = Path(gt=0)):
     todo_model = db.query(Todos).filter(Todos.id == todo_id).first()
@@ -69,6 +69,8 @@ def update_todo(new_todo: schemas.TodoRequest, db: Session = Depends(get_db), to
     db.refresh(todo_model)
     return todo_model
 
+
+# Endpoint to delete the existing todo.
 @router.delete('/delete', status_code=status.HTTP_204_NO_CONTENT)
 def delete_todo(todo_id: int, db: Session = Depends(get_db)):
     
