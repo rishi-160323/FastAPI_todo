@@ -5,19 +5,12 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../todo_service')))
 
 from todo_service.main import app
-
-
-
 import pytest
 from fastapi.testclient import TestClient
-import sqlalchemy
+from sqlalchemy_utils import database_exists, create_database, drop_database
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import sqlalchemy.orm
-# from todo_service.main import app
 from todo_service.database import Base, get_db
-from datetime import datetime
-# from ..todo_service import models
 from sqlalchemy import Column, Integer, Boolean, String
 
 
@@ -34,15 +27,10 @@ class Todos(Base):
     update_date = Column(String(255))
     update_time = Column(String(255))
 
-
-
 SQLALCHEMY_DATABASE_URL = 'mysql+mysqlconnector://root:nsx%40123@localhost/Task_Todo2'
+
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
-
-# SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-# engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 Base.metadata.create_all(bind=engine)
 
 # # Dependency override
@@ -68,25 +56,7 @@ def test_db():
         Todos(title="Test Todo 2", description="Description 2", completed=False,
                      create_date="01-01-2021", create_time="00:00:00", update_date="01-01-2021", update_time="00:00:00"),
         Todos(title="Test Todo 3", description="Description 3", completed=False,
-                     create_date="01-01-2021", create_time="00:00:00", update_date="01-01-2021", update_time="00:00:00"),
-        Todos(title="Test Todo 1", description="Description 1", completed=False,
-                     create_date="01-01-2021", create_time="00:00:00", update_date="01-01-2021", update_time="00:00:00"),
-        Todos(title="Test Todo 2", description="Description 2", completed=False,
-                     create_date="01-01-2021", create_time="00:00:00", update_date="01-01-2021", update_time="00:00:00"),
-        Todos(title="Test Todo 3", description="Description 3", completed=False,
-                     create_date="01-01-2021", create_time="00:00:00", update_date="01-01-2021", update_time="00:00:00"),
-        Todos(title="Test Todo 1", description="Description 1", completed=False,
-                     create_date="01-01-2021", create_time="00:00:00", update_date="01-01-2021", update_time="00:00:00"),
-        Todos(title="Test Todo 2", description="Description 2", completed=False,
-                     create_date="01-01-2021", create_time="00:00:00", update_date="01-01-2021", update_time="00:00:00"),
-        Todos(title="Test Todo 3", description="Description 3", completed=False,
-                     create_date="01-01-2021", create_time="00:00:00", update_date="01-01-2021", update_time="00:00:00"),
-        Todos(title="Test Todo 1", description="Description 1", completed=False,
-                     create_date="01-01-2021", create_time="00:00:00", update_date="01-01-2021", update_time="00:00:00"),
-        Todos(title="Test Todo 2", description="Description 2", completed=False,
-                     create_date="01-01-2021", create_time="00:00:00", update_date="01-01-2021", update_time="00:00:00"),
-        Todos(title="Test Todo 3", description="Description 3", completed=False,
-                     create_date="01-01-2021", create_time="00:00:00", update_date="01-01-2021", update_time="00:00:00"),
+                     create_date="01-01-2021", create_time="00:00:00", update_date="01-01-2021", update_time="00:00:00")
     ]
     db.add_all(todos)
     db.commit()
@@ -99,7 +69,7 @@ def test_get_todos(test_db):
     
     data = response.json()
     assert isinstance(data, list)
-    assert len(data) == 10  # We added 3 todos
+    assert len(data) == 3  # We added 3 todos
     
     # Check the structure of the first todo
     todo = data[0]
@@ -125,7 +95,7 @@ def test_get_todos_with_offset():
     
     data = response.json()
     assert isinstance(data, list)
-    assert len(data) == 10  # Offset is set to 1, so we should get 2 todos
+    assert len(data) == 2  # Offset is set to 1, so we should get 2 todos
 
 def test_get_todos_with_limit_and_offset():
     response = client.get("/?limit=1&offset=1")
@@ -134,8 +104,7 @@ def test_get_todos_with_limit_and_offset():
     data = response.json()
     assert isinstance(data, list)
     assert len(data) == 1  # Limit is set to 1 and offset is set to 1
-    # assert data[0]["title"] == "Test Todo 2"  # The second todo should be returned
-    assert data[0]["title"] == "Test Todo 2"
+    assert data[0]["title"] == "Test Todo 2" # The second todo should be returned
 
 
 def test_create_todo():
@@ -177,20 +146,15 @@ def test_sort_by_date_created():
 
 
 def test_update_todo_success(test_db):
-    # Get the ID of the initial todo item
-    todo_id = test_db.query(Todos).first().id
-    
+
     # Updated todo data
     updated_todo_data = {
         "title": "Updated Title",
         "description": "Updated Description",
         "completed": True
     }
-    
-    # Send PUT request to update todo item
+    todo_id = 1
     response = client.put(f"/update/{todo_id}", json=updated_todo_data)
-    
-    # Check response status code
     assert response.status_code == 202
     
     # Check response JSON data
@@ -206,22 +170,14 @@ def test_update_todo_success(test_db):
     assert updated_todo_in_db.completed == updated_todo_data["completed"]
 
 
-
 def test_delete_todo_success(test_db):
-    
-    # Send DELETE request to delete todo item
     response = client.delete(f"/delete?todo_id=1")
-
-    
-    # Check response status code
     assert response.status_code == 204
-    
     # Check response content
     assert response.content == b''
 
 
 def test_find_delete_todo(test_db):
-    # deleted_todo = test_db.query(Todos).get(1)
     deleted_todo = test_db.get(Todos, 1)
     print(deleted_todo)
     assert deleted_todo is None
