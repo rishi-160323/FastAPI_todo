@@ -1,10 +1,10 @@
-Todo App API
+<h2>Todo App API</h2>
 
 This is a basic API for a Todo app based on microservice architecture. With this API, you can create, read, update, and delete todos as per your convenience. The API provides a pagination feature to retrieve a certain number of todo details at a time.
 
 
 
-Features
+<h3>Features</h3>
 
 Create Todo: Add new todos.
 Read Todos: Retrieve todos with pagination support.
@@ -13,7 +13,7 @@ Delete Todo: Remove todos from the list.
 
 
 
-Technologies Used
+<h3>Technologies Used</h3>
 
 FastAPI: A modern, fast (high-performance), web framework for building APIs with Python 3.6+.
 Uvicorn: A lightning-fast ASGI server for FastAPI.
@@ -23,7 +23,7 @@ Pytest: A framework for unit testing.
 
 
 
-Installation
+<h3>Installation</h3>
 
 To run this API on your local system, ensure that the following are installed:
 
@@ -31,7 +31,7 @@ Python 3.6+
 MySQL
 
 
-Step-by-Step Installation
+<h3>Step-by-Step Installation</h3>
 
 1.Clone the repository:
 git clone https://github.com/yourusername/todo-app.git
@@ -48,7 +48,7 @@ sudo apt-get install mysql-shell
 
 
 
-Running the Application
+<h3>Running the Application</h3>
 
 1.Start the MySQL service:
 Ensure MySQL server is running and accessible.
@@ -59,7 +59,7 @@ This command starts the FastAPI server with auto-reload enabled.
 
 
 
-Running Tests
+<h3>Running Tests</h3>
 Unit tests are written using Pytest. Before running the tests, make sure to drop the old database if it exists, as the tests create and drop a temporary database.
 
 pytest
@@ -67,11 +67,11 @@ This command runs all the test cases.
 
 
 
-Contributing
+<h3>Contributing</h3>
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 
-License
+<h3>License</h3>
 This project is licensed under the MIT License.
 
 
