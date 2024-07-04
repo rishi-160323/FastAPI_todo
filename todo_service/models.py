@@ -5,6 +5,7 @@ from sqlalchemy import Column, Integer, Boolean, String
 class Todos(Base):
 
     __tablename__ = 'todos'
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True, unique=True)
     title = Column(String(255))

@@ -1,31 +1,11 @@
-import sys
-import os
-
-# Add the path to the todo_service directory
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../todo_service')))
+import pytest
 
 from todo_service.main import app
-import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy_utils import database_exists, create_database, drop_database
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from todo_service.database import Base, get_db
-from sqlalchemy import Column, Integer, Boolean, String
-
-
-class Todos(Base):
-
-    __tablename__ = 'todos'
-
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True, unique=True)
-    title = Column(String(255))
-    description = Column(String(255))
-    completed = Column(Boolean, default=False)
-    create_date = Column(String(255))
-    create_time = Column(String(255))
-    update_date = Column(String(255))
-    update_time = Column(String(255))
+from todo_service.models import Todos
 
 SQLALCHEMY_DATABASE_URL = 'mysql+mysqlconnector://root:nsx%40123@localhost/Task_Todo2'
 
