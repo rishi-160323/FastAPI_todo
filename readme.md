@@ -17,7 +17,7 @@ Delete Todo: Remove todos from the list.
 
 FastAPI: A modern, fast (high-performance), web framework for building APIs with Python 3.6+.
 Uvicorn: A lightning-fast ASGI server for FastAPI.
-MySQL: A relational database management system.
+SQLLite: A relational database management system.
 SQLAlchemy: An ORM (Object Relational Mapper) to interact with the database.
 Pytest: A framework for unit testing.
 
@@ -28,7 +28,7 @@ Pytest: A framework for unit testing.
 To run this API on your local system, ensure that the following are installed:
 
 Python 3.6+
-MySQL
+SQLLite
 
 
 <h3>Step-by-Step Installation</h3>
@@ -41,19 +41,19 @@ cd todo-app
 pip install fastapi
 pip install sqlalchemy
 pip install -U pydantic
-pip install mysql-connector-python
 
-3.Install MySQL Shell:
-sudo apt-get install mysql-shell
+3.Install SQLLite Shell:
+sudo apt-get install sqlite3
 
 
 
 <h3>Running the Application</h3>
 
-1.Start the MySQL service:
-Ensure MySQL server is running and accessible.
+1.Start the SQLLite service:
+Ensure SQLLite server is running and accessible.
 
-2.Run the FastAPI application:
+2.Run the FastAPI application with Docker container:
+docker-compose up --build
 uvicorn main:app --reload
 This command starts the FastAPI server with auto-reload enabled.
 
