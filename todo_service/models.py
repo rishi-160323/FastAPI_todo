@@ -1,10 +1,12 @@
-from database import Base
+from todo_service.database import Base
 from sqlalchemy import Column, Integer, Boolean, String
 
 
+# Models structured to save the data in database within given format.
 class Todos(Base):
 
     __tablename__ = 'todos'
+    # Lets the code to chnage in existing table's schema.
     __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True, unique=True)

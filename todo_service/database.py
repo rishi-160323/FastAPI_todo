@@ -1,13 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-# Main database for performing operation and store data
-# DATABASE_URL = 'mysql+mysqlconnector://root:nsx%40123@localhost/Task_Todo'
+SQLALCHEMY_DATABASE_URL = 'sqlite:///./todosapp.db'
 
-# Separate database for unit tests.
-DATABASE_URL = 'mysql+mysqlconnector://root:nsx%40123@localhost/Task_Todo2'
-
-engine = create_engine(DATABASE_URL)
+# engine is a comman interface between database and application to interact.
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False})
 
 # Create a SessionLocal class for handling database sessions.
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -15,7 +12,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Create a base class for your data models.
 Base = declarative_base()
 
-# Function to get a database session which opens as request comes and get closed as request gets fulfilled.
+# Function to open db as session starts then close as end.
 def get_db():
     db = SessionLocal()
     try:

@@ -1,0 +1,46 @@
+# version: '3.8'
+
+# services:
+#   fastapi_app:
+#     build: .
+#     container_name: fastapi_app
+#     ports:
+#       - "8000:8000"
+#     volumes:
+#       - .:/app
+#     environment:
+#       - PYTHONPATH=/app
+
+# version: '3.8'
+
+# services:
+#   fastapi:
+#     build: .
+#     ports:
+#       - "8000:8000"
+#     volumes:
+#       - .:/app
+
+# version: '3.8'
+
+# services:
+#   fastapi:
+#     build: .
+#     ports:
+#       - "8000:8000"
+#     volumes:
+#       - .:/app
+
+version: '3.8'
+
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: todo_service/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+
+

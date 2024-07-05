@@ -1,11 +1,13 @@
 from fastapi import APIRouter, HTTPException, Depends, Path, Query
 from starlette import status
-from models import Todos
-import schemas
 from sqlalchemy.orm import Session
-from database import SessionLocal
 from typing import List
 from datetime import datetime
+
+from todo_service.database import SessionLocal
+from todo_service.models import Todos
+from todo_service import schemas
+
 
 router = APIRouter(
     prefix='/todo',
@@ -45,7 +47,8 @@ def create_todo(new_todo: schemas.TodoRequest, db: Session = Depends(get_db)):
     date_time = datetime.now()
     current_date = date_time.strftime("%d-%m-%Y")
     current_time = date_time.strftime("%H:%M:%S")
-    todo_model = Todos(**new_todo.model_dump(), create_date=current_date, create_time=current_time,
+    # Inside the docker model_dump() was not working so we used dict() which is depriciated.
+    todo_model = Todos(**new_todo.dict(), create_date=current_date, create_time=current_time,
                         update_date=current_date, update_time=current_time)
     db.add(todo_model)
     db.commit()

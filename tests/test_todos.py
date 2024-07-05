@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from todo_service.database import Base, get_db
 from todo_service.models import Todos
 
-SQLALCHEMY_DATABASE_URL = 'mysql+mysqlconnector://root:nsx%40123@localhost/Task_Todo2'
+SQLALCHEMY_DATABASE_URL = 'sqlite:///./todosapp.db'
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

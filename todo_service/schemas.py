@@ -11,8 +11,10 @@ class TodoResponse(BaseModel):
     update_date: str
     update_time: str
     
-    # class Config:
-    #     orm_mode = True
+    # orm_mode is needed to enabled  the from_orm method in order to create a model instance by
+    #  reading attributes from another class instance.
+    class Config:
+        orm_mode = True
 
 class TodoRequest(BaseModel):
     title: str
